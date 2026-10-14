@@ -57,23 +57,23 @@ fn main() {
 
     // Section 1 TODO: processors.
     //   Read sys.cpus().len() and print "Logical processors : {}".
-    println!("Logical processors : {}", sys.cpus().len());	
+    println!("Logical processors : {}", sys.cpus().len());
 
     // Section 2 TODO: memory.
     //   Read sys.total_memory() and sys.used_memory() (both in bytes), print
     //   total and free in GB (divide by GB), and set mem_load to the percent.
     let total_memory = sys.total_memory();
-let used_memory = sys.used_memory();
-let free_memory = total_memory.saturating_sub(used_memory);
+    let used_memory = sys.used_memory();
+    let free_memory = total_memory.saturating_sub(used_memory);
 
-println!("Memory total (GB) : {:.2}", total_memory as f64 / GB);
-println!("Memory free (GB)  : {:.2}", free_memory as f64 / GB);
+    println!("Memory total (GB) : {:.2}", total_memory as f64 / GB);
+    println!("Memory free (GB)  : {:.2}", free_memory as f64 / GB);
 
-let mem_load: u64 = if total_memory > 0 {
-    used_memory * 100 / total_memory
-} else {
-    0
-};
+    let mem_load: u64 = if total_memory > 0 {
+        used_memory * 100 / total_memory
+    } else {
+        0
+    };
 
     // Section 3 TODO: uptime.
     //   Print System::uptime() / 60 as "Uptime (minutes) : {}".
@@ -86,17 +86,20 @@ let mem_load: u64 = if total_memory > 0 {
     let disks = Disks::new_with_refreshed_list();
     let mut disk_used_pct: f64 = 0.0;
 
-if let Some(disk) = disks.list().first() {
-    let total = disk.total_space();
-    let free = disk.available_space();
-    let used = total.saturating_sub(free);
+    if let Some(disk) = disks.list().first() {
+        let total = disk.total_space();
+        let free = disk.available_space();
+        let used = total.saturating_sub(free);
 
-    println!("Disk total (GB) : {:.2}", total as f64 / GB);
-    println!("Disk free (GB)  : {:.2}", free as f64 / GB);
-    println!("Disk used (%)   : {:.2}", used as f64 * 100.0 / total.max(1) as f64);
+        println!("Disk total (GB) : {:.2}", total as f64 / GB);
+        println!("Disk free (GB)  : {:.2}", free as f64 / GB);
+        println!(
+            "Disk used (%)   : {:.2}",
+            used as f64 * 100.0 / total.max(1) as f64
+        );
 
-    disk_used_pct = used as f64 * 100.0 / total.max(1) as f64;
-}
+        disk_used_pct = used as f64 * 100.0 / total.max(1) as f64;
+    }
 
     // Section 5: score (given, once the two variables above are real)
     let findings = Findings {
@@ -104,11 +107,7 @@ if let Some(disk) = disks.list().first() {
         disk_used_pct,
     };
     let score = compute_score(&findings);
-    println!(
-        "Efficiency score   : {} / 100 ({})",
-        score,
-        rating(score)
-    );
+    println!("Efficiency score   : {} / 100 ({})", score, rating(score));
     println!("Done.");
 }
 #[cfg(test)]
